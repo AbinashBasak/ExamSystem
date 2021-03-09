@@ -16,8 +16,8 @@ const ensureToken = (req, res, next) => {
 router.post('/login', userController.login);
 router.post('/sign-up', userController.signUp);
 router.post('/completed/exams', ensureToken, userController.getCompletedExamList);
-router.post('/completed/exam', ensureToken, userController.getCompletedExamById);
+router.get('/completed/exam', ensureToken, userController.getCompletedExamById);
 router.post('/incomplete/exams', ensureToken, ensureToken, userController.getIncompleteExamList);
-router.post('/incomplete/exam', ensureToken, userController.getIncompleteExamById);
+router.get('/incomplete/exam', ensureToken, userController.getIncompleteExamById);
 
 module.exports = router;
