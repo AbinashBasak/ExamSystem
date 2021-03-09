@@ -17,12 +17,9 @@ const save = (obj) => {
 		});
 };
 const update = () => {
-	Users.updateOne({ email: 'abinashbasak129@gmail.com' }, { $set: { completedExam: [mongoose.Types.ObjectId('6046df79808ebe4b501b9b91')] } })
+	Users.updateOne({ email: 'abinashbasak129@gmail.com' }, { $set: { completedExam: [{ id: mongoose.Types.ObjectId('6046df79808ebe4b501b9b91'), title: 'JavaScript' }] } })
 		.then((data) => {
 			console.log(data);
-			Users.find()
-				.exec()
-				.then((e) => console.log(e));
 		})
 		.catch((err) => {
 			console.log(err);
@@ -40,14 +37,14 @@ const get = () => {
 			console.log(err);
 		});
 };
-// save({
-// 	title: 'JS',
-// 	quizes: [
-// 		mongoose.Types.ObjectId('604685a28051ad1ce41963ab'),
-// 		mongoose.Types.ObjectId('604685a28051ad1ce41963a8'),
-// 		mongoose.Types.ObjectId('604685a28051ad1ce41963a9'),
-// 		mongoose.Types.ObjectId('604685a28051ad1ce41963aa'),
-// 	],
-// });
-// update();
+save({
+	title: 'JS',
+	quizes: [
+		mongoose.Types.ObjectId('604685a28051ad1ce41963ab'),
+		mongoose.Types.ObjectId('604685a28051ad1ce41963a8'),
+		mongoose.Types.ObjectId('604685a28051ad1ce41963a9'),
+		mongoose.Types.ObjectId('604685a28051ad1ce41963aa'),
+	],
+});
+update();
 get();

@@ -114,7 +114,7 @@ const getCompletedExamById = (req, res) => {
 			const email = data.user.id;
 
 			//get quix list and send
-			User.findOne({ email, completedExam: mongoose.Types.ObjectId(req.query.id) })
+			User.findOne({ email, 'completedExam.examId': mongoose.Types.ObjectId(req.query.id) })
 				.exec()
 				.then((user) => {
 					if (!user) {
@@ -173,7 +173,7 @@ const getIncompleteExamById = (req, res) => {
 			const email = data.user.id;
 
 			//get quix list and send
-			User.findOne({ email, completedExam: mongoose.Types.ObjectId(req.query.id) })
+			User.findOne({ email, 'incompleteExam.examId': mongoose.Types.ObjectId(req.query.id) })
 				.exec()
 				.then((user) => {
 					if (!user) {
