@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const User = require('../models/user');
-const Quiz = require('../models/quiz');
+const ExamList = require('../models/examList');
 const QuizPool = require('../models/quizPool');
 const { ENCRYPTION_KEY } = require('../config/server');
 const { paramsPerser } = require('../utils/parser');
@@ -89,11 +89,12 @@ const getCompletedExamList = (req, res) => {
 			res.status(403).json({ massage: 'invalid token' });
 		} else {
 			const email = data.user.id;
-
+			console.log(email);
 			//get quix list and send
 			User.findOne({ email }, { completedExam: 1, _id: 0 })
 				.exec()
 				.then((e) => {
+					console.log(e);
 					return res.status(200).json({
 						examIDs: e,
 					});
@@ -114,15 +115,16 @@ const getCompletedExamById = (req, res) => {
 			const email = data.user.id;
 
 			//get quix list and send
-			User.findOne({ email, 'completedExam.examId': mongoose.Types.ObjectId(req.query.id) })
+			User.findOne({ email, 'completedExam.exam': mongoose.Types.ObjectId(req.query.id) })
 				.exec()
 				.then((user) => {
 					if (!user) {
 						res.status(403).json({ massage: 'You are not authorized to see this exam' });
 					} else {
-						Quiz.findOne({ _id: mongoose.Types.ObjectId(req.query.id) }, { quizes: 1, _id: 0 })
+						ExamList.findOne({ _id: mongoose.Types.ObjectId(req.query.id) }, { quizes: 1, _id: 0 })
 							.exec()
 							.then((e) => {
+								console.log(req.query.id);
 								Promise.all(
 									e.quizes.map((id) => {
 										return QuizPool.findOne({ _id: mongoose.Types.ObjectId(id) }).exec();
@@ -180,7 +182,7 @@ const getIncompleteExamById = (req, res) => {
 						res.status(403).json({ massage: 'Look like you already participate in the exam' });
 					} else {
 						//get quix list and send
-						Quiz.findOne({ _id: mongoose.Types.ObjectId(req.query.id) }, { quizes: 1, _id: 0 })
+						ExamList.findOne({ _id: mongoose.Types.ObjectId(req.query.id) }, { quizes: 1, _id: 0 })
 							.exec()
 							.then((e) => {
 								Promise.all(

@@ -7,9 +7,9 @@ const UserShema = new Schema({
 	password: { type: String, required: true, maxlength: 20 },
 	rollNo: { type: Number },
 	dept: { type: String },
-	completedExam: { type: [{ examId: Schema.Types.ObjectId, title: String }] },
+	completedExam: { type: [{ exam: Schema.Types.ObjectId, title: String }] },
 	userType: { type: String, default: 'Student' },
-	incompleteExam: { type: [{ examId: Schema.Types.ObjectId, title: String }] },
+	incompleteExam: { type: [{ exam: Schema.Types.ObjectId, title: String }] },
 });
 
 module.exports = mongoose.model('User', UserShema);

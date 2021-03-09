@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const examSchema = new Schema({
-	title: { type: String, required: true, maxlength: 50 },
-	date: { type: Date, default: Date.now },
-	quizes: [Schema.Types.ObjectId],
+const quizSchema = new Schema({
+	question: { type: String, required: true, maxlength: 100 },
+	answer: { type: String, required: true },
+	options: { type: [], required: true },
 });
 
-module.exports = mongoose.model('examlists', examSchema);
+module.exports = mongoose.model('QuizPool', quizSchema);
