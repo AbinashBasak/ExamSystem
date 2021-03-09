@@ -1,5 +1,5 @@
 const User = require('../models/quizPool');
-const Users = require('../models/examList');
+const Users = require('../models/user');
 const mongoose = require('mongoose');
 const { MONGO_URI } = require('../config/server');
 
