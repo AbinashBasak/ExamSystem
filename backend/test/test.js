@@ -16,15 +16,16 @@ const save = (obj) => {
 			console.log(err);
 		});
 };
-// const update = () => {
-// 	Users.updateOne({ email: 'abinashbasak129@gmail.com' }, { $set: { completedExam: [{ exam: mongoose.Types.ObjectId('60472b04c762741030727708'), title: 'JavaScript' }] } })
-// 		.then((data) => {
-// 			console.log(data);
-// 		})
-// 		.catch((err) => {
-// 			console.log(err);
-// 		});
-// // };
+const update = () => {
+	Users.updateOne({ email: 'subho@email.com' }, { $set: { completedExam: [{ exam: mongoose.Types.ObjectId('60472cd030ce7a10666c1a6c'), title: 'OS' }] } })
+		.then((data) => {
+			console.log(data);
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+};
+update();
 // save({
 // 	question: 'Which module gives control of the CPU to the process selected by the short-term scheduler?',
 // 	answer: 'a',
@@ -62,14 +63,14 @@ const save = (obj) => {
 // 	answer: 'b',
 // 	options: [{ a: ' shortest job scheduling algorithm', b: 'round robin scheduling algorithm', c: 'priority scheduling algorithm', d: 'multilevel queue scheduling algorithm' }],
 // });
-save({
-	title: 'Operating System',
-	quizes: [
-		mongoose.Types.ObjectId('60472b04c762741030727708'),
-		mongoose.Types.ObjectId('60472b04c762741030727707'),
-		mongoose.Types.ObjectId('60472b04c762741030727706'),
-		mongoose.Types.ObjectId('60472b04c762741030727705'),
-		mongoose.Types.ObjectId('60472b04c762741030727704'),
-		mongoose.Types.ObjectId('60472b04c762741030727703'),
-	],
-});
+// save({
+// 	title: 'Operating System',
+// 	quizes: [
+// 		mongoose.Types.ObjectId('60472b04c762741030727708'),
+// 		mongoose.Types.ObjectId('60472b04c762741030727707'),
+// 		mongoose.Types.ObjectId('60472b04c762741030727706'),
+// 		mongoose.Types.ObjectId('60472b04c762741030727705'),
+// 		mongoose.Types.ObjectId('60472b04c762741030727704'),
+// 		mongoose.Types.ObjectId('60472b04c762741030727703'),
+// 	],
+// });
