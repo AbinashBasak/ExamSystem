@@ -19,5 +19,7 @@ router.get('/completed/exams', ensureToken, userController.getCompletedExamList)
 router.get('/completed/exam', ensureToken, userController.getCompletedExamById);
 router.get('/incomplete/exams', ensureToken, ensureToken, userController.getIncompleteExamList);
 router.get('/incomplete/exam', ensureToken, userController.getIncompleteExamById);
+router.get('/score', ensureToken, userController.getScore);
+router.post('/checkAnswer', ensureToken, userController.checkAnswer);
 
 module.exports = router;

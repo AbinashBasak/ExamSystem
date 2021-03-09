@@ -204,6 +204,78 @@ const getIncompleteExamById = (req, res) => {
 	});
 };
 
+const getScore = (req, res) => {
+	jwt.verify(req.token, ENCRYPTION_KEY, (err, data) => {
+		if (err) {
+			res.status(403).json({ massage: 'invalid token' });
+		} else {
+			const email = data.user.id;
+			User.find({ email, 'scores.exam': mongoose.Types.ObjectId(req.query.examId) }, { _id: 0, scores: 1 })
+				.exec()
+				.then((e) => {
+					res.status(200).json(e);
+				})
+				.catch((err) => {
+					res.status(400).json(err);
+				});
+		}
+	});
+};
+
+/**
+ *
+ * @param {*} req
+ * @param {*} res
+ * @req examId
+ * @req answerSheet
+ *
+ */
+const checkAnswer = (req, res) => {
+	jwt.verify(req.token, ENCRYPTION_KEY, (err, data) => {
+		if (err) {
+			res.status(403).json({ massage: 'invalid token' });
+		} else {
+			const email = data.user.id;
+
+			ExamList.findOne({ _id: mongoose.Types.ObjectId(req.query.examId) }, { quizes: 1, _id: 0 })
+				.exec()
+				.then((e) => {
+					Promise.all(
+						e.quizes.map((id) => {
+							return QuizPool.findOne({ _id: mongoose.Types.ObjectId(id) }, { answer: 1 }).exec();
+						})
+					)
+						.then((result) => {
+							try {
+								const arr = JSON.parse(req.query.answerSheet);
+								let totalScore = 0;
+								for (let i = 0; i < arr.length; i++) {
+									let element = arr[i];
+									for (let index = 0; index < result.length; index++) {
+										if (result[index]._id == element._id && result[index].answer == element.answer) {
+											totalScore++;
+											break;
+										}
+									}
+								}
+								const score = { exam: mongoose.Types.ObjectId(req.query.examId), score: totalScore };
+								return User.updateOne({ email }, { $push: { scores: score } }).exec();
+							} catch (error) {
+								return res.status(400).json({ massage: 'something went wrong', error });
+							}
+						})
+						.then((e) => {
+							return res.status(200).json(e);
+						})
+						.catch((err) => res.status(403).json({ err }));
+				})
+				.catch((err) => {
+					return res.status(500).json(err);
+				});
+		}
+	});
+};
+
 module.exports = {
 	login,
 	signUp,
@@ -211,4 +283,6 @@ module.exports = {
 	getCompletedExamById,
 	getIncompleteExamList,
 	getIncompleteExamById,
+	getScore,
+	checkAnswer,
 };
