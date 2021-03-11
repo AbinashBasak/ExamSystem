@@ -8,7 +8,7 @@ const UserShema = new Schema({
 	rollNo: { type: Number },
 	dept: { type: String },
 	completedExam: { type: [{ exam: Schema.Types.ObjectId, title: String }] },
-	scores: { type: [{ exam: Schema.Types.ObjectId, score: Number, fullMask: Number }] },
+	scores: { type: [{ exam: Schema.Types.ObjectId, score: Number, fullMask: Number, title: String }] },
 	userType: { type: String, default: 'Student' },
 	incompleteExam: { type: [{ exam: Schema.Types.ObjectId, title: String }] },
 });

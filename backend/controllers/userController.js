@@ -275,7 +275,7 @@ const checkAnswer = (req, res) => {
 			res.status(401).json({ massage: 'invalid token' });
 		} else {
 			const email = data.user.id;
-			ExamList.findOne({ _id: mongoose.Types.ObjectId(req.query.examId) }, { quizes: 1, _id: 0 })
+			ExamList.findOne({ _id: mongoose.Types.ObjectId(req.query.examId) }, { quizes: 1, title: 1, _id: 0 })
 				.exec()
 				.then((e) => {
 					totalQuestions = e.quizes.length;
@@ -297,15 +297,14 @@ const checkAnswer = (req, res) => {
 										}
 									}
 								}
-								console.log('score=>', totalScore, ' full=>', totalQuestions);
-								const score = { exam: mongoose.Types.ObjectId(req.query.examId), score: totalScore, fullMask: totalQuestions };
+								// console.log('score=>', totalScore, ' full=>', totalQuestions);
+								const score = { exam: mongoose.Types.ObjectId(req.query.examId), score: totalScore, fullMask: totalQuestions, title: e.title };
 								return User.updateOne({ email }, { $push: { scores: score } }).exec();
 							} catch (error) {
 								return res.status(400).json({ massage: 'something went wrong', error });
 							}
 						})
 						.then((e) => {
-							console.log(e);
 							return res.status(200).json(e);
 						})
 						.catch((err) => res.status(401).json({ err }));
