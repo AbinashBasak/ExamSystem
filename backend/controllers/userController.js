@@ -35,7 +35,7 @@ const addExamToNewUser = (userId) => {
 const login = (req, res) => {
 	// check required params misiing or not
 	if (!req.query.email || req.query.email.trim() == '' || !req.query.password || req.query.password.trim() == '') {
-		return res.status(300).json({
+		return res.status(401).json({
 			error: 'parameters missing',
 		});
 	}
@@ -45,7 +45,7 @@ const login = (req, res) => {
 		.exec()
 		.then((e) => {
 			if (!e) {
-				return res.status(500).json({
+				return res.status(401).json({
 					massage: 'Invalid userId or password',
 				});
 			} else if (e.password == req.query.password) {
@@ -56,7 +56,7 @@ const login = (req, res) => {
 					token,
 				});
 			} else {
-				return res.status(500).json({
+				return res.status(401).json({
 					massage: 'Invalid userId or password',
 				});
 			}
@@ -82,7 +82,7 @@ const signUp = (req, res) => {
 	if (!results[0]) {
 		user = new User(results[1]);
 	} else {
-		return res.status(300).json({
+		return res.status(401).json({
 			error: 'parameters missing',
 			requirdParams: results[1],
 		});
@@ -99,14 +99,14 @@ const signUp = (req, res) => {
 			});
 		})
 		.catch((err) => {
-			res.status(300).json({ error: err });
+			res.status(401).json({ error: err });
 		});
 };
 
 const getCompletedExamList = (req, res) => {
 	jwt.verify(req.token, ENCRYPTION_KEY, (err, data) => {
 		if (err) {
-			res.status(403).json({ massage: 'invalid token' });
+			res.status(401).json({ massage: 'invalid token' });
 		} else {
 			const email = data.user.id;
 			console.log(email);
@@ -130,7 +130,7 @@ const getCompletedExamById = (req, res) => {
 	//verify user
 	jwt.verify(req.token, ENCRYPTION_KEY, (err, data) => {
 		if (err) {
-			res.status(403).json({ massage: 'invalid token' });
+			res.status(401).json({ massage: 'invalid token' });
 		} else {
 			const email = data.user.id;
 
@@ -139,7 +139,7 @@ const getCompletedExamById = (req, res) => {
 				.exec()
 				.then((user) => {
 					if (!user) {
-						res.status(403).json({ massage: 'You are not authorized to see this exam' });
+						res.status(401).json({ massage: 'You are not authorized to see this exam' });
 					} else {
 						ExamList.findOne({ _id: mongoose.Types.ObjectId(req.query.id) }, { quizes: 1, _id: 0 })
 							.exec()
@@ -168,7 +168,7 @@ const getIncompleteExamList = (req, res) => {
 	//verify user
 	jwt.verify(req.token, ENCRYPTION_KEY, (err, data) => {
 		if (err) {
-			res.status(403).json({ massage: 'invalid token' });
+			res.status(401).json({ massage: 'invalid token' });
 		} else {
 			//get quix list and send
 			const email = data.user.id;
@@ -190,16 +190,16 @@ const getIncompleteExamById = (req, res) => {
 	//verify user
 	jwt.verify(req.token, ENCRYPTION_KEY, (err, data) => {
 		if (err) {
-			res.status(403).json({ massage: 'invalid token' });
+			res.status(401).json({ massage: 'invalid token' });
 		} else {
 			const email = data.user.id;
 
 			//get quix list and send
-			User.findOne({ email, 'incompleteExam.examId': mongoose.Types.ObjectId(req.query.id) })
+			User.findOne({ email, 'incompleteExam.exam': mongoose.Types.ObjectId(req.query.id) })
 				.exec()
 				.then((user) => {
 					if (!user) {
-						res.status(403).json({ massage: 'Look like you already participate in the exam' });
+						res.status(401).json({ massage: 'Look like you already participate in the exam' });
 					} else {
 						//get quix list and send
 						ExamList.findOne({ _id: mongoose.Types.ObjectId(req.query.id) }, { quizes: 1, _id: 0 })
@@ -227,11 +227,11 @@ const getIncompleteExamById = (req, res) => {
 const getProfileDetails = (req, res) => {
 	jwt.verify(req.token, ENCRYPTION_KEY, (err, data) => {
 		if (err) {
-			res.status(403).json({ massage: 'invalid token' });
+			res.status(401).json({ massage: 'invalid token' });
 		} else {
 			const email = data.user.id;
 			const password = data.user.password;
-			User.findOne({ email, password }, { _id: 0, name: 1, rollNo: 1, dept: 1, email: 1, completedExam: 1, incompleteExam: 1 })
+			User.findOne({ email, password }, { _id: 0, name: 1, rollNo: 1, dept: 1, email: 1, completedExam: 1, incompleteExam: 1, scores: 1 })
 				.exec()
 				.then((e) => {
 					res.status(200).json(e);
@@ -246,7 +246,7 @@ const getProfileDetails = (req, res) => {
 const getScore = (req, res) => {
 	jwt.verify(req.token, ENCRYPTION_KEY, (err, data) => {
 		if (err) {
-			res.status(403).json({ massage: 'invalid token' });
+			res.status(401).json({ massage: 'invalid token' });
 		} else {
 			const email = data.user.id;
 			User.findOne({ email, 'scores.exam': mongoose.Types.ObjectId(req.query.examId) }, { _id: 0, scores: 1 })
@@ -272,13 +272,15 @@ const getScore = (req, res) => {
 const checkAnswer = (req, res) => {
 	jwt.verify(req.token, ENCRYPTION_KEY, (err, data) => {
 		if (err) {
-			res.status(403).json({ massage: 'invalid token' });
+			res.status(401).json({ massage: 'invalid token' });
 		} else {
 			const email = data.user.id;
+			let totalQuestions;
 
 			ExamList.findOne({ _id: mongoose.Types.ObjectId(req.query.examId) }, { quizes: 1, _id: 0 })
 				.exec()
 				.then((e) => {
+					totalQuestions = e.quizes.length;
 					Promise.all(
 						e.quizes.map((id) => {
 							return QuizPool.findOne({ _id: mongoose.Types.ObjectId(id) }, { answer: 1 }).exec();
@@ -297,7 +299,7 @@ const checkAnswer = (req, res) => {
 										}
 									}
 								}
-								const score = { exam: mongoose.Types.ObjectId(req.query.examId), score: totalScore };
+								const score = { exam: mongoose.Types.ObjectId(req.query.examId), score: totalScore, fullMask: totalQuestions };
 								return User.updateOne({ email }, { $push: { scores: score } }).exec();
 							} catch (error) {
 								return res.status(400).json({ massage: 'something went wrong', error });
@@ -306,7 +308,7 @@ const checkAnswer = (req, res) => {
 						.then((e) => {
 							return res.status(200).json(e);
 						})
-						.catch((err) => res.status(403).json({ err }));
+						.catch((err) => res.status(401).json({ err }));
 				})
 				.catch((err) => {
 					return res.status(500).json(err);
