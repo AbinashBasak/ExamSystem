@@ -276,6 +276,7 @@ const checkAnswer = (req, res) => {
 		} else {
 			const email = data.user.id;
 			let totalQuestions;
+			console.log(req.query.examId);
 			ExamList.findOne({ _id: mongoose.Types.ObjectId(req.query.examId) }, { quizes: 1, _id: 0 })
 				.exec()
 				.then((e) => {
