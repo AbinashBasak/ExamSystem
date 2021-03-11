@@ -275,8 +275,7 @@ const checkAnswer = (req, res) => {
 			res.status(401).json({ massage: 'invalid token' });
 		} else {
 			const email = data.user.id;
-			let totalQuestions;
-			console.log(req);
+			console.log(req.query);
 			ExamList.findOne({ _id: mongoose.Types.ObjectId(req.query.examId) }, { quizes: 1, _id: 0 })
 				.exec()
 				.then((e) => {
