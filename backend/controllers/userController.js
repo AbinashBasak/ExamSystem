@@ -280,6 +280,7 @@ const checkAnswer = (req, res) => {
 			ExamList.findOne({ _id: mongoose.Types.ObjectId(req.query.examId) }, { quizes: 1, _id: 0 })
 				.exec()
 				.then((e) => {
+					console.log(e);
 					totalQuestions = e.quizes.length;
 					Promise.all(
 						e.quizes.map((id) => {
@@ -311,6 +312,7 @@ const checkAnswer = (req, res) => {
 						.catch((err) => res.status(401).json({ err }));
 				})
 				.catch((err) => {
+					console.log('err=>', err);
 					return res.status(400).json(err);
 				});
 		}
