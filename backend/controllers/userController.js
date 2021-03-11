@@ -7,6 +7,24 @@ const QuizPool = require('../models/quizPool');
 const { ENCRYPTION_KEY } = require('../config/server');
 const { paramsPerser } = require('../utils/parser');
 
+const addExamToNewUser = (userId) => {
+	ExamList.find()
+		.exec()
+		.then((e) => {
+			e.forEach((element) => {
+				User.updateOne({ _id: mongoose.Types.ObjectId(userId) }, { $push: { incompleteExam: [{ exam: mongoose.Types.ObjectId(element._id), title: element.title }] } })
+					.exec()
+					.then((data) => {
+						console.log(data);
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+			});
+		})
+		.catch((err) => console.log(err));
+};
+
 /**
  *
  * login user
@@ -73,6 +91,8 @@ const signUp = (req, res) => {
 	// save user
 	user.save()
 		.then((data) => {
+			console.log(data);
+			addExamToNewUser(data._id);
 			res.status(200).json({
 				massage: 'Account created',
 				id: data._id,
@@ -211,7 +231,7 @@ const getProfileDetails = (req, res) => {
 		} else {
 			const email = data.user.id;
 			const password = data.user.password;
-			User.findOne({ email, password }, { _id: 0, name: 1, rollNo: 1, dept: 1, email: 1 })
+			User.findOne({ email, password }, { _id: 0, name: 1, rollNo: 1, dept: 1, email: 1, completedExam: 1, incompleteExam: 1 })
 				.exec()
 				.then((e) => {
 					res.status(200).json(e);

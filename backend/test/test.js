@@ -2,6 +2,7 @@ const User = require('../models/quizPool');
 const Users = require('../models/user');
 const mongoose = require('mongoose');
 const { MONGO_URI } = require('../config/server');
+const ExamList = require('../models/examList');
 
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connection.once('open', () => console.log('bd connect')).on('error', (err) => console.log(err));
@@ -25,7 +26,7 @@ const update = () => {
 			console.log(err);
 		});
 };
-update();
+
 // save({
 // 	question: 'Which module gives control of the CPU to the process selected by the short-term scheduler?',
 // 	answer: 'a',
