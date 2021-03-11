@@ -15,6 +15,7 @@ const ensureToken = (req, res, next) => {
 
 router.post('/login', userController.login);
 router.post('/sign-up', userController.signUp);
+router.post('/profile', userController.getProfileDetails);
 router.get('/completed/exams', ensureToken, userController.getCompletedExamList);
 router.get('/completed/exam', ensureToken, userController.getCompletedExamById);
 router.get('/incomplete/exams', ensureToken, ensureToken, userController.getIncompleteExamList);

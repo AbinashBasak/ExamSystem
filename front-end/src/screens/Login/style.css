@@ -1,0 +1,17 @@
+.login-canvas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.login-form {
+  max-width: 400px;
+  box-shadow: 2px 2px 4px 2px #ccc;
+  padding: 2rem;
+  border-radius: 12px;
+}
+.login-form img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}

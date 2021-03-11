@@ -204,13 +204,32 @@ const getIncompleteExamById = (req, res) => {
 	});
 };
 
+const getProfileDetails = (req, res) => {
+	jwt.verify(req.token, ENCRYPTION_KEY, (err, data) => {
+		if (err) {
+			res.status(403).json({ massage: 'invalid token' });
+		} else {
+			const email = data.user.id;
+			const password = data.user.password;
+			User.findOne({ email, password }, { _id: 0, name: 1, rollNo: 1, dept: 1, email: 1 })
+				.exec()
+				.then((e) => {
+					res.status(200).json(e);
+				})
+				.catch((err) => {
+					res.status(400).json(err);
+				});
+		}
+	});
+};
+
 const getScore = (req, res) => {
 	jwt.verify(req.token, ENCRYPTION_KEY, (err, data) => {
 		if (err) {
 			res.status(403).json({ massage: 'invalid token' });
 		} else {
 			const email = data.user.id;
-			User.find({ email, 'scores.exam': mongoose.Types.ObjectId(req.query.examId) }, { _id: 0, scores: 1 })
+			User.findOne({ email, 'scores.exam': mongoose.Types.ObjectId(req.query.examId) }, { _id: 0, scores: 1 })
 				.exec()
 				.then((e) => {
 					res.status(200).json(e);
@@ -279,6 +298,7 @@ const checkAnswer = (req, res) => {
 module.exports = {
 	login,
 	signUp,
+	getProfileDetails,
 	getCompletedExamList,
 	getCompletedExamById,
 	getIncompleteExamList,
