@@ -1,10 +1,16 @@
 import React from "react";
 import { Table, Container } from "react-bootstrap";
 import { FaRegHandPointRight } from "react-icons/fa";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 
 const StartExam = () => {
   const { exam_id } = useParams();
+  const history = useHistory();
+
+  if (!localStorage.getItem("token")) {
+    history.push("/login");
+  }
+
   return (
     <div>
       <div

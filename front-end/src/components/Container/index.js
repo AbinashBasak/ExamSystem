@@ -7,7 +7,7 @@ const Container = (props) => {
       <div className="container-header">
         <h3>{props.header}</h3>
       </div>
-      <div className="container-body">{props.body}</div>
+      <div className="container-body">{props.children}</div>
     </div>
   );
 };

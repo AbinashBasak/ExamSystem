@@ -22,7 +22,7 @@ const ExamCard = (props) => {
       </Col>
       <Col lg="3" md="3" sm="12">
         <div className="d-flex justify-content-center">
-          <Link class="btn btn-success" to={"/start_exam/" + props.exam_id}>
+          <Link className="btn btn-success" to={"/start_exam/" + props.exam_id}>
             Attend Exam
           </Link>
         </div>

@@ -25,6 +25,22 @@ const addExamToNewUser = (userId) => {
 		.catch((err) => console.log(err));
 };
 
+const updateUserExamList = (email, examId, examTitle) => {
+	User.updateOne({ email }, { $pull: { 'incompleteExam.exam': mongoose.Types.ObjectId(examId) } })
+		.exec()
+		.then((e) =>
+			User.updateOne({ _id: mongoose.Types.ObjectId(userId) }, { $push: { completedExam: [{ exam: mongoose.Types.ObjectId(examId), title: examTitle }] } })
+				.exec()
+				.then((data) => {
+					console.log(data);
+				})
+				.catch((err) => {
+					console.log(err);
+				})
+		)
+		.catch((err) => console.log(err));
+};
+
 /**
  *
  * login user

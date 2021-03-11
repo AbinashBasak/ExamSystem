@@ -4,7 +4,7 @@ import { Button } from "react-bootstrap";
 // icons
 import { BsLock, BsUnlock } from "react-icons/bs";
 
-const Password = () => {
+const Password = (props) => {
   const [showPassword, setShowPassword] = React.useState(false);
 
   return (
@@ -13,6 +13,7 @@ const Password = () => {
         className="form-control"
         type={showPassword ? "text" : "password"}
         placeholder="Password"
+        onChange={(e) => props.setPassword(e.target.value)}
         required
       />
       <Button

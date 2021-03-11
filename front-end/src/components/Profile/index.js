@@ -1,9 +1,12 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { BsPower } from "react-icons/bs";
 import "./style.css";
 
 const Profile = (props) => {
+  const history = useHistory();
+
   return (
     <div className="profile bg-primary">
       <div className="d-flex justify-content-center">
@@ -33,7 +36,15 @@ const Profile = (props) => {
         <label className="form-label">Email</label>
         <input className="form-control" readOnly={true} value={props.email} />
       </div>
-      <Button id="logout" variant="danger" className="text-light">
+      <Button
+        id="logout"
+        variant="danger"
+        className="text-light"
+        onClick={() => {
+          localStorage.removeItem("token");
+          history.push("/login");
+        }}
+      >
         <BsPower className="mr-2" />
         <span>Log out</span>
       </Button>

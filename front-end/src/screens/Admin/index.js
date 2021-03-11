@@ -1,10 +1,17 @@
 import React from "react";
 import { Container, Table } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 
 // components
 import ReportCardAdmin from "../../components/ReportCardAdmin";
 
 const Admin = () => {
+  const history = useHistory();
+
+  if (!localStorage.getItem("token")) {
+    history.push("/login");
+  }
+
   // TODO, use api
   var all_result = [
     <ReportCardAdmin
