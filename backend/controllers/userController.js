@@ -311,7 +311,7 @@ const checkAnswer = (req, res) => {
 						.catch((err) => res.status(401).json({ err }));
 				})
 				.catch((err) => {
-					return res.status(500).json(err);
+					return res.status(400).json(err);
 				});
 		}
 	});
