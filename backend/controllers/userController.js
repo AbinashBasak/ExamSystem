@@ -195,14 +195,14 @@ const getIncompleteExamById = (req, res) => {
 			const email = data.user.id;
 
 			//get quix list and send
-			User.findOne({ email, 'incompleteExam.exam': mongoose.Types.ObjectId(req.query.id) })
+			User.findOne({ email, 'incompleteExam.exam': mongoose.Types.ObjectId(req.query.examId) })
 				.exec()
 				.then((user) => {
 					if (!user) {
 						res.status(401).json({ massage: 'Look like you already participate in the exam' });
 					} else {
 						//get quix list and send
-						ExamList.findOne({ _id: mongoose.Types.ObjectId(req.query.id) }, { quizes: 1, _id: 0 })
+						ExamList.findOne({ _id: mongoose.Types.ObjectId(req.query.examId) }, { quizes: 1, _id: 0 })
 							.exec()
 							.then((e) => {
 								Promise.all(
