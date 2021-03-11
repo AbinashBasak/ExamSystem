@@ -27,6 +27,9 @@ const update = () => {
 		});
 };
 
+ExamList.find()
+	.exec()
+	.then((e) => console.log(e));
 // save({
 // 	question: 'Which module gives control of the CPU to the process selected by the short-term scheduler?',
 // 	answer: 'a',
