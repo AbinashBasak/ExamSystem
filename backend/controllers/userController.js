@@ -25,11 +25,17 @@ const addExamToNewUser = (userId) => {
 		.catch((err) => console.log(err));
 };
 
+/**
+ *
+ * @param {*} email
+ * @param {*} examId
+ * @param {*} examTitle
+ */
 const updateUserExamList = (email, examId, examTitle) => {
-	User.updateOne({ email }, { $pull: { 'incompleteExam.exam': mongoose.Types.ObjectId(examId) } })
+	User.updateOne({ email }, { $pull: { incompleteExam: { exam: mongoose.Types.ObjectId(examId) } } })
 		.exec()
 		.then((e) =>
-			User.updateOne({ _id: mongoose.Types.ObjectId(userId) }, { $push: { completedExam: [{ exam: mongoose.Types.ObjectId(examId), title: examTitle }] } })
+			User.updateOne({ email }, { $push: { completedExam: [{ exam: mongoose.Types.ObjectId(examId), title: examTitle }] } })
 				.exec()
 				.then((data) => {
 					console.log(data);
@@ -315,6 +321,7 @@ const checkAnswer = (req, res) => {
 								}
 								// console.log('score=>', totalScore, ' full=>', totalQuestions);
 								const score = { exam: mongoose.Types.ObjectId(req.query.examId), score: totalScore, fullMask: totalQuestions, title: e.title };
+								updateUserExamList(email, req.query.examId, e.title);
 								return User.updateOne({ email }, { $push: { scores: score } }).exec();
 							} catch (error) {
 								return res.status(400).json({ massage: 'something went wrong', error });
